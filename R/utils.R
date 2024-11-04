@@ -167,11 +167,11 @@ assert_compatible_size <- function(op, x, y) {
   x_size <- vec_size(x)
   y_size <- vec_size(y)
   if (!(x_size == y_size || 1 %in% c(x_size, y_size))) {
-    message <- c(
-      glue::glue(
-        "incompatible vector sizes in <{vec_ptype_full(x)}>[1:{x_size}] {op} <{vec_ptype_full(y)}>[1:{y_size}] --"),
-        "{tf} does not recycle arguments.") |>
-      paste(collapse = "\n")
+    message <- cli::format_inline(
+      "incompatible vector sizes in {.cls {vec_ptype_full(x)}}[1:{x_size}] {op} ",
+      "{.cls {vec_ptype_full(y)}}[1:{y_size}] --",
+      "\n{{tf}} does not recycle arguments."
+    )
     stop_incompatible_op(op, x, y, message = message)
   }
 }
