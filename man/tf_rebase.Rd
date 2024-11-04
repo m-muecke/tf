@@ -43,6 +43,6 @@ themselves generics for methods \code{tf_rebase.tfd.tfd},
 some other  \code{tf}-vector
 
 \item \code{tf_rebase(tfb)}: re-express a \code{tfb}-vector in the same representation as
-some other  \code{tf}-vector.
+some other \code{tf}-vector.
 
 }}
