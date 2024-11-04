@@ -74,10 +74,7 @@ quantile.tf <- function(x, probs = seq(0, 1, 0.25), na.rm = FALSE,
   # cf. Serfling, R., & Wijesuriya, U. (2017).
   # Depth-based nonparametric description of functional data,
   #   with emphasis on use of spatial depth.
-  warning(
-    "only pointwise, non-functional quantiles implemented for tfs.",
-    call. = FALSE
-  )
+  cli::cli_warn("Only pointwise, non-functional quantiles implemented for {.cls tf}s.")
   summarize_tf(x,
                probs = probs, na.rm = na.rm, names = names,
                type = type, op = "quantile", eval = is_tfd(x), ...

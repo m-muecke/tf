@@ -60,10 +60,9 @@ fpc_wsvd.matrix <- function(data, arg, pve = 0.995) {
   pc <- if (!any(nas)) {
     svd(data_wc, nu = 0, nv = min(dim(data)))
   } else {
-    message("Using softImpute SVD on ", round(mean(nas) * 100, 1), "% missing data")
+    cli::cli_inform("Using softImpute SVD on {round(mean(nas) * 100, 1)}% missing data.")
     if (pve + mean(nas) > 1) {
-      warning("High <pve> with many missings likely to yield bad FPC estimates.",
-              call. = FALSE)
+      cli::cli_warn("High {.arg pve} with many missings likely to yield bad FPC estimates.")
     }
     simpute_svd(data_wc)
   }

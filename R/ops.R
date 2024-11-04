@@ -222,9 +222,8 @@ tfd_op_tfd <- function(op, x, y) {
   ret <- map2(x_, y_, \(x, y) do.call(op, list(x, y)))
 
   if (attr(x, "evaluator_name") != attr(y, "evaluator_name")) {
-    warning(
-      "inputs have different evaluators, result has ", attr_ret$evaluator_name,
-      call. = FALSE
+    cli::cli_warn(
+      "Inputs have different evaluators, result has {.val {attr_ret$evaluator_name}}."
     )
   }
   if ("tfd_irreg" %in% attr_ret$class) {
@@ -276,23 +275,26 @@ tfb_multdiv_numeric <- function(op, x, y) {
 }
 
 tfb_op_numeric <- function(op, x, y) {
-  warning(glue("potentially lossy cast to <tfd> and back in ",
-               "<{vec_ptype_full(x)}> {op} <{vec_ptype_full(y)}>"))
+  cli::cli_warn(
+    "Potentially lossy cast to {.cls tfd} and back in {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+  )
   eval <- tfd_op_numeric(op, tfd(x), y)
   tf_rebase(eval, x, penalized = FALSE, verbose = FALSE)
   #TODO: restore sp afterwards so all properties are preserved?
 }
 
 numeric_op_tfb <- function(op, x, y) {
-  warning(glue("potentially lossy cast to <tfd> and back in ",
-               "<{vec_ptype_full(x)}> {op} <{vec_ptype_full(y)}>"))
+  cli::cli_warn(
+    "Potentially lossy cast to {.cls tfd} and back in {.cls {vec_ptype_full(x)}} {op} {.cls {vec_ptype_full(y)}}."
+  )
   eval <- numeric_op_tfd(op, x, tfd(y))
   tf_rebase(eval, y, penalized = FALSE, verbose = FALSE) #TODO: see tfb_op_numeric
 }
 
 tfb_op_tfb <- function(op, x, y) {
-  warning(glue::glue("potentially lossy casts to <tfd> and back for ",
-               "<{vec_ptype_full(x)}> {op} <{vec_ptype_full(y)}>"))
+  cli::cli_warn(
+    "Potentially lossy casts to {.cls tfd} and back for {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+  )
   eval <- tfd_op_tfd(op, tfd(x), tfd(y))
   ret_ptype <- if (vec_size(x) >= vec_size(y)) vec_ptype(x) else vec_ptype(y)
   tf_rebase(eval, ret_ptype, penalized = FALSE, verbose = FALSE) #TODO: see tfb_op_numeric
@@ -306,12 +308,14 @@ tfb_plusminus_tfb <- function(op, x, y) {
   # tf_rebase the one with the smaller basis...
   if (!same_basis(x, y)) {
     if (vec_size(x) >= vec_size(y)) {
-      warning(glue::glue("bases unequal -- potentially lossy tf_rebase for 2nd argument in ",
-                         "<{vec_ptype_full(x)}> {op} <{vec_ptype_full(y)}>"))
+      cli::cli_warn(
+        "Bases unequal -- potentially lossy {.fn tf_rebase} for 2nd argument in {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+      )
       y <- tf_rebase(y, x)
     } else {
-      warning(glue::glue("bases unequal -- potentially lossy tf_rebase for 1st argument in ",
-                         "<{vec_ptype_full(x)}> {op} <{vec_ptype_full(y)}>"))
+      cli::cli_warn(
+        "Bases unequal -- potentially lossy {.fn tf_rebase} for 1st argument in {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+      )
       x <- tf_rebase(x, y)
     }
   }

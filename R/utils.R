@@ -19,10 +19,7 @@ find_arg <- function(data, arg) {
       if (n_distinct(arg) != dim(data)[2]) arg <- NULL
     }
     if (is.null(arg) || anyNA(arg)) {
-      message(
-        "Column names not suitable as 'arg'-values. Using 1:ncol(data).",
-        call. = FALSE
-      )
+      cli::cli_inform("Column names not suitable as 'arg'-values. Using {.code 1:ncol(data)}.")
       arg <- numeric(0)
     }
   }
@@ -59,7 +56,7 @@ get_resolution <- function(arg) {
                       possibly(.f = .min_diff, otherwise = NA)) |>
     min(na.rm = TRUE)
   if (min_diff < .Machine$double.eps * 10) {
-    stop("(Almost) non-unique arg values detected.", call. = FALSE)
+    cli::cli_abort("(Almost) non-unique {.arg arg} values detected.")
   }
   10^(floor(log10(min_diff)) - 1)
 }
@@ -166,7 +163,6 @@ same_basis <- function(x, y) {
             check.attributes = FALSE) |> isTRUE()
 }
 
-#' @importFrom glue glue
 assert_compatible_size <- function(op, x, y) {
   x_size <- vec_size(x)
   y_size <- vec_size(y)

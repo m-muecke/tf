@@ -40,14 +40,15 @@ tf_rebase.tfd.tfd <- function(object, basis_from, arg = tf_arg(basis_from), ...)
   if (is_irreg(basis_from) && vec_size(basis_from) != 0 &&
         vec_size(basis_from) != vec_size(object)) {
     if (vec_size(object) != 1) {
-      stop("can't rebase regular tfd with irregular tfd of incompatible size",
-            call. = FALSE)
+      cli::cli_abort(
+        "Can't rebase regular {.cls tfd} with irregular {.cls tfd} of incompatible size."
+      )
     }
     # if <object> is length 1, extrapolate it to *all* eval points of
     # basis_from by default
     if (default_arg) {
       arg <- sort_unique(arg, simplify = TRUE)
-      message("using all ", length(arg), " unique time points for new arg.")
+      cli::cli_inform("Using all {length(arg)} unique time points for new {.arg arg}.")
       default_arg <- FALSE
     }
   }
