@@ -1,6 +1,7 @@
 warn_tfd_cast <- function(x, y, to = class(y)[1]) {
- warning("combining incompatible <", class(x)[1], "> with <", class(y)[1],
-         "> by casting to <", to, ">.", call. = FALSE)
+  cli::cli_warn(
+    "Combining incompatible {.cls {class(x)[1]}} with {.cls {class(y)[1]}} by casting to {.cls {to}}."
+  )
 }
 
 get_larger_domain <- function(x, y) {

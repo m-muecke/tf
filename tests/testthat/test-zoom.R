@@ -21,8 +21,8 @@ test_that("tf_zoom for tfd works", {
   )
 
   expect_error(tf_zoom(x, c(0.8, 0.1)))
-  expect_error(tf_zoom(x, 0.11, 0.111), "no data")
-  expect_error(tf_zoom(xi, 0.051, 0.0511), "no data")
+  expect_error(tf_zoom(x, 0.11, 0.111), "No data in zoom region.")
+  expect_error(tf_zoom(xi, 0.051, 0.0511), "No data in zoom region.")
 
   expect_true(is_irreg(tf_zoom(x, 0.2, seq(0.3, 1, length.out = length(x)))))
 })
@@ -41,11 +41,11 @@ test_that("tf_zoom for tfb_spline works", {
   )
 
   expect_error(tf_zoom(xb, c(0.8, 0.1)))
-  expect_error(tf_zoom(xb, 0.11, 0.111), "no data")
+  expect_error(tf_zoom(xb, 0.11, 0.111), "No data in zoom region.")
 
   expect_message(
     out <- tf_zoom(xb, 0.2, seq(0.3, 1, length.out = length(x))),
-    "converting to tfd"
+    "with varying start or end points - converting to `tfd`."
   )
   expect_true(is_irreg(out))
 })
@@ -69,7 +69,7 @@ test_that("tf_zoom for tfb_fpc works", {
   )
 
   expect_error(suppressWarnings(tf_zoom(xfpc, 0.8, 0.1)))
-  expect_error(suppressWarnings(tf_zoom(xfpc, 0.11, 0.111)), "no data")
+  expect_error(suppressWarnings(tf_zoom(xfpc, 0.11, 0.111)), "No data in zoom region.")
   expect_true(suppressWarnings(
     is_irreg(tf_zoom(xfpc, 0.2, seq(0.3, 1, length.out = length(x))))
   ))

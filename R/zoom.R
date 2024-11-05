@@ -56,8 +56,8 @@ tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
   )
   if (is_irreg(f) || !args$regular) {
     nas <- map_int(ret, nrow) == 0
-    if (all(nas)) stop("no data in zoom region.", call. = FALSE)
-    if (any(nas)) warning("NAs created by tf_zoom.", call. = FALSE)
+    if (all(nas)) cli::cli_abort("No data in zoom region.")
+    if (any(nas)) cli::cli_warn("{.code NA}s created by {.fn tf_zoom}.")
     for (n in which(nas)) {
       ret[[n]] <- data_frame(
         arg = unname(args$dom[1]), value = NA_real_, .name_repair = "minimal"
@@ -65,7 +65,7 @@ tf_zoom.tfd <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
     }
   } else {
     if (any(map_int(ret, nrow) == 0)) {
-      stop("no data in zoom region.", call. = FALSE)
+      cli::cli_abort("No data in zoom region.")
     }
   }
   ret <- tfd(ret, domain = args$dom)
@@ -79,11 +79,11 @@ tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
                         ...) {
   args <- prep_tf_zoom_args(f, begin, end)
   if (!args$regular) {
-    message("tf_zoom() with varying start or end points - converting to tfd.")
+    cli::cli_inform("{.fn tf_zoom} with varying start or end points - converting to {.code tfd}.")
     return(tf_zoom(tfd(f), begin, end))
   }
   use <- tf_arg(f) >= args$dom[1] & tf_arg(f) <= args$dom[2]
-  if (!any(use)) stop("no data in zoom region.", call. = FALSE)
+  if (!any(use)) cli::cli_abort("No data in zoom region.")
   ret <- f
   attr(ret, "basis_matrix") <- attr(f, "basis_matrix")[use, ]
   attr(ret, "arg") <- tf_arg(f)[use]
@@ -95,9 +95,6 @@ tf_zoom.tfb <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
 #' @export
 tf_zoom.tfb_fpc <- function(f, begin = tf_domain(f)[1], end = tf_domain(f)[2],
                             ...) {
-  warning(
-    "zoomed-in FPC representation will lose orthonormality of FPC basis.",
-    call. = FALSE
-  )
+  cli::cli_warn("Zoomed-in FPC representation will lose orthonormality of FPC basis.")
   NextMethod()
 }

@@ -86,10 +86,10 @@ tf_domain <- function(f) {
 `tf_domain<-` <- function(x, value) {
   assert_class(x, "tf")
   assert_numeric(value, any.missing = FALSE, len = 2, unique = TRUE, sorted = TRUE)
-  warning(c(
-    "This changes the functions' domain but not their argument values!\n",
-    "To restrict functions to a part of their domain, use tf_zoom."
-  ), call. = FALSE)
+  cli::cli_warn(c(
+    x = "This changes the functions' domain but not their argument values!",
+    i = "To restrict functions to a part of their domain, use {.fn tf_zoom}."
+  ))
   attr(x, "domain") <- value
   x
 }
@@ -159,10 +159,10 @@ tf_basis <- function(f, as_tfd = FALSE) {
 #' @rdname tfmethods
 #' @export
 `tf_arg<-` <- function(x, value) {
-  warning(c(
-    "This changes arguments (and resolution) without changing the corresponding function values!\n",
-    "In order to re-evaluate functions on a new grid, use tf_interpolate."
-  ), call. = FALSE)
+  cli::cli_warn(c(
+    x = "This changes arguments (and resolution) without changing the corresponding function values!",
+    i = "In order to re-evaluate functions on a new grid, use {.fn tf_interpolate}."
+  ))
   UseMethod("tf_arg<-")
 }
 
@@ -180,13 +180,12 @@ tf_basis <- function(f, as_tfd = FALSE) {
 `tf_arg<-.tfd_reg` <- function(x, value) {
   assert_arg(value, x, check_unique = FALSE)
   if (!(length(unlist(value, use.names = FALSE)) == length(tf_arg(x)))) {
-    stop("length(arg) not the same as original -- use tf_interpolate.",
-         call. = FALSE)
+    cli::cli_abort(
+      "{.code length(arg)} not the same as original -- use {.fn tf_interpolate}."
+    )
   }
   if (length(ensure_list(value)) != 1) {
-    stop(
-      "can't assign irregular argument list to ", class(x)[1],
-      call. = FALSE)
+    cli::cli_abort("Can't assign irregular argument list to {.cls class(x)[1]}.")
   }
 
   attr(x, "arg") <- ensure_list(value)

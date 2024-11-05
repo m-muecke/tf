@@ -68,10 +68,7 @@ median.tf <- function(x, na.rm = FALSE, depth = c("MBD", "pointwise"), ...) {
   tf_depths <- tf_depth(x, depth = depth)
   med <- x[tf_depths == max(tf_depths)]
   if (length(med) > 1) {
-    warning(
-      length(med), " observations with maximal depth, returning their mean.",
-      call. = FALSE
-    )
+    cli::cli_warn("{length(med)} observations with maximal depth, returning their mean.")
     mean(med)
   } else {
     med
@@ -132,7 +129,7 @@ summary.tf <- function(object, ...) {
 Summary.tf <- function(...) {
   not_defined <- switch(.Generic, all = , any = TRUE, FALSE)
   if (not_defined) {
-    stop(sprintf("%s not defined for \"tf\" objects", .Generic))
+    cli::cli_abort("{ .Generic} not defined for {.cls tf} objects.")
   }
   summarize_tf(..., op = .Generic, eval = is_tfd(list(...)[[1]]))
 }

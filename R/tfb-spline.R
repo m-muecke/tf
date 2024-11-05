@@ -30,10 +30,7 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
   s_args <- list(...)[names(list(...)) %in% names(formals(s))]
   if (!has_name(s_args, "bs")) s_args$bs <- "cr"
   if (s_args$bs == "ad") {
-    warning(
-      "adaptive smooths with (bs='ad') not implemented yet. Changing to bs='cr'.",
-      call. = FALSE
-    )
+    cli::cli_warn("Adaptive smooths with ({.code bs = 'ad'}) not implemented yet. Changing to {.code bs = 'cr'}.")
     s_args$bs <- "cr"
   }
   if (!has_name(s_args, "k")) s_args$k <- min(25, nrow(arg_u))
@@ -75,11 +72,8 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
   if (!penalized) {
     underdetermined <- n_evaluations <= spec_object$bs.dim
     if (any(underdetermined)) {
-      stop(
-        "At least as many basis functions as evaluations for ",
-        sum(underdetermined), " functions.",
-        " Use penalized = TRUE or reduce k for spline interpolation.",
-        call. = FALSE
+      cli::cli_abort(
+        "At least as many basis functions as evaluations for {sum(underdetermined)} functions. Use {.code penalized = TRUE} or reduce k for spline interpolation."
       )
     }
     fit <-
@@ -95,10 +89,9 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
         ls_fit = ls_fit
       )
     if (global && verbose) {
-      message(sprintf(c(
-        "Using global smoothing parameter sp = %.3g,",
-        " estimated on subsample of curves."
-      ), fit$sp[1]))
+      cli::cli_inform(
+        "Using global smoothing parameter {.code sp = {round(fit$sp[1], 3)}} estimated on subsample of curves."
+      )
     }
   }
   if (!regular) {
@@ -108,20 +101,19 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
     )
   }
   if (isTRUE(min(fit$pve) < 0.5)) {
-    warning(c("Fit captures <50% of input data variability for at least one function",
-              " -- consider increasing no. of basis functions 'k' or decreasing penalization."),
-              call. = FALSE)
+    cli::cli_warn("
+      Fit captures <50% of input data variability for at least one function
+      -- consider increasing no. of basis functions 'k' or decreasing penalization.
+    ")
     verbose <- TRUE
   }
   if (verbose) {
     pve_summary <- utils::capture.output(summary(round(100 * fit$pve, 1)))
-    message(
-      "Percentage of input data variability preserved in basis representation\n(",
-      if (!ls_fit) "on inverse link-scale, " else NULL,
-      "per functional observation, approximate):\n",
-      pve_summary[1], "\n",
-      pve_summary[2]
-    )
+    cli::cli_inform(c(
+      "Percentage of input data variability preserved in basis representation",
+      "({if (!ls_fit) 'on inverse link-scale '}per functional observation, approximate):",
+      pve_summary[1], pve_summary[2]
+    ))
   }
 
   basis_constructor <- smooth_spec_wrapper(spec_object)
@@ -136,7 +128,7 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
   if (family$family == "gaussian" && family$link == "identity") {
     family_label <- ""
   } else {
-    family_label <- glue(" ({family$family} with {family$link}-link)")
+    family_label <- glue::glue("({family$family} with {family$link}-link)")
   }
 
   ret <- new_vctr(fit[["coef"]],
@@ -370,8 +362,7 @@ tfb_spline.default <- function(data, arg = NULL,
                                global = FALSE,
                                verbose = TRUE, ...) {
 
-  message("input `data` not from a recognized class;
-            returning prototype of length 0")
+  cli::cli_inform("Input {.arg data} not from a recognized class; returning prototype of length 0.")
 
   data <- data_frame(.name_repair = "minimal")
   new_tfb_spline(data,

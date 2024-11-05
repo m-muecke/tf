@@ -59,7 +59,7 @@
 `[.tf` <- function(x, i, j, interpolate = TRUE, matrix = TRUE) {
   if (!interpolate && inherits(x, "tfb")) {
     interpolate <- TRUE
-    message("interpolate argument ignored for data in basis representation")
+    cli::cli_inform("{.arg interpolate} ignored for data in basis representation.")
   }
   # handle i
   if (missing(i)) {
@@ -74,19 +74,18 @@
 
   # handle j
   if (matrix && is.list(j)) {
-    stop("need a single vector-valued <j> if matrix = TRUE", call. = FALSE)
+    cli::cli_abort("Need a single vector-valued {.arg j} if {.code matrix = TRUE}.")
   }
   j <- ensure_list(j)
   if (!(length(j) %in% c(1, length(i)))) {
-    stop("wrong length for <j>", call. = FALSE)
+    cli::cli_abort("Wrong length for {.arg j}.")
   }
   evals <- tf_evaluate(x, arg = j)
   if (!interpolate) {
     new_j <- map2(j, ensure_list(tf_arg(x)), \(x, y) !(x %in% y))
     if (any(unlist(new_j, use.names = FALSE))) {
-      warning(
-        "interpolate = FALSE & no evaluations for some <j>: NAs created.",
-        call. = FALSE
+      cli::cli_warn(
+        "{.code interpolate = FALSE} & no evaluations for some {.arg j}: {.code NA}s created."
       )
     }
     evals <- map2(evals, new_j, \(x, y) ifelse(y, NA, x))

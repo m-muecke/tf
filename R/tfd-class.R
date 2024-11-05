@@ -48,7 +48,7 @@ new_tfd <- function(arg = NULL, datalist = NULL, regular = TRUE,
       }
     )
     n_evals <- map(datalist, \(x) length(x$value))
-    if (any(n_evals == 0)) warning("NA entries created.", call. = FALSE)
+    if (any(n_evals == 0)) cli::cli_warn("{.code NA} entries created.")
     datalist <- map_if(
       datalist, n_evals == 0, \(x) list(arg = domain[1], value = NA)
     )
@@ -203,7 +203,7 @@ tfd.list <- function(data, arg = NULL, domain = NULL,
       arg <- map2(arg, where_na, \(x, y) x[!y])
     } else {
       if (is.null(arg)) {
-        warning("No argument values supplied, using index positions.", call. = FALSE)
+        cli::cli_warn("No {.arg arg} values supplied, using index positions.")
         arg <- map(data, seq_along)
       }
       arg <- ensure_list(arg)
@@ -275,9 +275,8 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
     # check if all NAs occur at the same args and try to make a regular tfd if so
     na_args <- map2(arg, nas, \(x, y) x[y])
     if (!all(duplicated(na_args)[-1])) {
-      warning(
-        length(unlist(nas, use.names = FALSE)), " evaluations were NA, returning irregular tfd.",
-        call. = FALSE
+      cli::cli_warn(
+        "{length(unlist(nas, use.names = FALSE))} evaluations were {.code NA}, returning irregular {.cls tfd}."
       )
     } else {
       na_arg_string <- prettyNum(na_args[[1]]) |> paste(collapse = ", ")
@@ -285,10 +284,8 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
         na_arg_string <- substr(na_arg_string, 1, options()$width - 15) |>
           paste0("[... truncated]")
       }
-      warning(
-        length(unlist(nas, use.names = FALSE)), " evaluations on arg = (", na_arg_string,
-        ") were NA, returning regular data on reduced grid.",
-        call. = FALSE
+      cli::cli_warn(
+        "{length(unlist(nas, use.names = FALSE))} evaluations on {.code arg = ({na_arg_string})} were {.code NA}, returning regular data on reduced grid."
       )
       nas <- nas[1]
     }
@@ -307,7 +304,7 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
 #' @export
 tfd.default <- function(data, arg = NULL, domain = NULL,
                         evaluator = tf_approx_linear, ...) {
-  message("input `data` not recognized class; returning prototype of length 0")
+  cli::cli_inform("Input {.arg data} not recognized class; returning prototype of length 0.")
   datalist <- list()
   evaluator <- as_name(enexpr(evaluator))
   new_tfd(arg = arg, datalist = datalist, domain = domain, regular = TRUE,

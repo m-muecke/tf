@@ -10,19 +10,16 @@ new_tfb_fpc <- function(data, domain = NULL,
     return(ret)
   }
   if (!is.null(method) && !is.null(basis_from)) {
-    stop("Can't specify both method *and* basis_from for new_tfb_fpc",
-         call. = FALSE)
+    cli::cli_abort("Can't specify both {.arg method} *and* {.arg basis_from} for {.fn new_tfb_fpc}.")
   }
   arg <- uniquecombs(data$arg, ordered = TRUE) |> unlist(use.names = FALSE)
 
   domain <- domain %||% range(arg)
   if (!isTRUE(all.equal(domain, range(arg)))) {
-    warning(
-      "domain for tfb_fpc can't be larger than observed arg-range --",
-      " extrapolating FPCs is a bad idea.\n domain reset to [", min(arg),
-      ",", max(arg), "]",
-      call. = FALSE
-    )
+    cli::cli_warn(c(
+      x = "{.arg domain} for {.cls tfb_fpc} can't be larger than observed arg-range -- extrapolating FPCs is a bad idea.",
+      i = "{.arg domain} reset to [{min(arg)}, {max(arg)}]."
+    ))
     domain <- range(arg)
   }
 
@@ -205,7 +202,7 @@ tfb_fpc.tf <- function(data, arg = NULL, method = fpc_wsvd, ...) {
 tfb_fpc.default <- function(data, arg = NULL, domain = NULL, method = fpc_wsvd,
                             ...) {
   if (!missing(data)) {
-    message("input `data` not recognized class;\nreturning prototype of length 0")
+    cli::cli_inform("Input {.arg data} not recognized class; returning prototype of length 0.")
   }
 
   data <- data_frame(.name_repair = "minimal")
