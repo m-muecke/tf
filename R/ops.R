@@ -48,7 +48,7 @@ NULL
   # not comparing names, as per convention...
   same <- all(compare_tf_attribs(e1, e2))
   if (!same) {
-    rep(FALSE, max(e1_size, e2_size))
+    rep(FALSE, vec_size(e1))
   } else {
     map2_lgl(e1, e2, \(x, y) isTRUE(all.equal(x, y)))
   }
