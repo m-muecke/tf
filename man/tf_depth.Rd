@@ -8,7 +8,7 @@
 \usage{
 tf_depth(x, arg, depth = "MBD", na.rm = TRUE, ...)
 
-\method{tf_depth}{matrix}(x, arg, depth = "MBD", na.rm = TRUE, ...)
+\method{tf_depth}{matrix}(x, arg, depth = c("MBD", "MEI"), na.rm = TRUE, ...)
 
 \method{tf_depth}{tf}(x, arg, depth = "MBD", na.rm = TRUE, ...)
 }
@@ -17,7 +17,7 @@ tf_depth(x, arg, depth = "MBD", na.rm = TRUE, ...)
 
 \item{arg}{grid of evaluation points}
 
-\item{depth}{currently available: "MBD", i.e. modified band depth}
+\item{depth}{currently available: "MBD", i.e. modified 2-band depth, and "MEI"}
 
 \item{na.rm}{TRUE remove missing observations?}
 
@@ -29,7 +29,18 @@ vector of tf_depth values
 }
 \description{
 Data depths for functional data.
-Currently implemented: Modified Band-2 Depth, see reference.
+Currently implemented:
+\itemize{
+\item Modified Band-2 Depth
+\item Modified Epigraph Index.
+}
+}
+\details{
+Roughly, modified band depth computes the centrality
+of a function (scale of 0 (extreme) to 0.5 (central)), while the epigraph index computes how often it is above
+other functions (scale of 0 (lowest) to 1 (highest)).
+The two are closely related -- for functions that never cross other functions,
+MBD is \eqn{-2(MEI - 0.5)^2 + .5}.
 }
 \references{
 Sun, Ying, Genton, G M, Nychka, W D (2012).
@@ -38,6 +49,10 @@ Sun, Ying, Genton, G M, Nychka, W D (2012).
 
 López-Pintado, Sara, Romo, Juan (2009).
 \dQuote{On the concept of depth for functional data.}
-\emph{Journal of the American statistical Association}, \bold{104}(486), 718--734.
+\emph{Journal of the American Statistical Association}, \bold{104}(486), 718--734.
+
+López-Pintado, Sara, Romo, Juan (2011).
+\dQuote{A half-region depth for functional data.}
+\emph{Computational Statistics & Data Analysis}, \bold{55}(4), 1679--1695.
 }
 \concept{tidyfun ordering and ranking functions}
