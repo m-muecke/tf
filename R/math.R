@@ -24,6 +24,10 @@ Math.tfd <- function(x, ...) {
 #' @rdname tfgroupgenerics
 #' @export
 Math.tfb <- function(x, ...) {
+  genericname <- .Generic
+  cli::cli_warn(
+    "Potentially lossy cast to {.cls tfd} and back in {genericname}({.cls {vec_ptype_full(x)}})"
+  )
   basis_args <- attr(x, "basis_args")
   eval <- fun_math(tfd(x), .Generic)
   do.call(

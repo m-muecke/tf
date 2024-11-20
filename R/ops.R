@@ -276,7 +276,7 @@ tfb_multdiv_numeric <- function(op, x, y) {
 
 tfb_op_numeric <- function(op, x, y) {
   cli::cli_warn(
-    "Potentially lossy cast to {.cls tfd} and back in {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+    "Potentially lossy cast to {.cls tfd} and back in {.cls {vec_ptype_full(x)}} {op} {.cls {vec_ptype_full(y)}}."
   )
   eval <- tfd_op_numeric(op, tfd(x), y)
   tf_rebase(eval, x, penalized = FALSE, verbose = FALSE)
@@ -293,7 +293,7 @@ numeric_op_tfb <- function(op, x, y) {
 
 tfb_op_tfb <- function(op, x, y) {
   cli::cli_warn(
-    "Potentially lossy casts to {.cls tfd} and back for {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+    "Potentially lossy casts to {.cls tfd} and back for {.cls  {vec_ptype_full(x)}} {op} {.cls {vec_ptype_full(y)}}."
   )
   eval <- tfd_op_tfd(op, tfd(x), tfd(y))
   ret_ptype <- if (vec_size(x) >= vec_size(y)) vec_ptype(x) else vec_ptype(y)
@@ -309,12 +309,12 @@ tfb_plusminus_tfb <- function(op, x, y) {
   if (!same_basis(x, y)) {
     if (vec_size(x) >= vec_size(y)) {
       cli::cli_warn(
-        "Bases unequal -- potentially lossy {.fn tf_rebase} for 2nd argument in {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+        "Bases unequal -- potentially lossy {.fn tf_rebase} for 2nd argument in {.cls {vec_ptype_full(x)}} {op} {.cls {vec_ptype_full(y)}}."
       )
       y <- tf_rebase(y, x)
     } else {
       cli::cli_warn(
-        "Bases unequal -- potentially lossy {.fn tf_rebase} for 1st argument in {.cls vec_ptype_full(x)} {op} {.cls vec_ptype_full(y)}."
+        "Bases unequal -- potentially lossy {.fn tf_rebase} for 1st argument in {.cls {vec_ptype_full(x)}} {op} {.cls {vec_ptype_full(y)}}."
       )
       x <- tf_rebase(x, y)
     }
