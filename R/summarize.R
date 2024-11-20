@@ -37,7 +37,7 @@ summarize_tf <- function(..., op = NULL, eval = FALSE) {
 #' @returns a `tf` object with the computed result.\cr
 #' **`summary.tf`** returns a `tf`-vector with the mean function, the
 #' variance function, the functional median, and the functional range
-#' (i.e., *pointwise* min/max) of the central half of the functions,
+#' (i.e., the *pointwise* min/max) of the central half of the functions,
 #' as defined by [tf_depth()].
 #' @name tfsummaries
 #' @family tidyfun summary functions
@@ -113,7 +113,7 @@ var.tf <- function(x, y = NULL, na.rm = FALSE, use) {
 #' @rdname tfsummaries
 summary.tf <- function(object, ...) {
   tf_depths <- tf_depth(object, ...)
-  central <- which(tf_depths <= median(tf_depths))
+  central <- which(tf_depths >= median(tf_depths))
   central_half <- range(object[central])
   c(
     mean = mean(object), var = var(object),
