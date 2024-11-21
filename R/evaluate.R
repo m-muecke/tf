@@ -41,10 +41,11 @@ tf_evaluate.tfd <- function(object, arg,
   assert_arg(arg, object, check_unique = FALSE)
   ret <- pmap(
     list(arg, ensure_list(tf_arg(object)), tf_evaluations(object)),
-    \(x, y, z) evaluate_tfd_once(
-      new_arg = x, arg = y, evaluations = z,
-      evaluator = evaluator
-    )
+    function(x, y, z) {
+      evaluate_tfd_once(
+        new_arg = x, arg = y, evaluations = z, evaluator = evaluator
+      )
+    }
   )
 
   setNames(ret, names(object))
@@ -89,11 +90,13 @@ tf_evaluate.tfb <- function(object, arg, ...) {
   } else {
     ret <- pmap(
       list(arg, ensure_list(tf_arg(object)), coef(object)),
-      \(x, y, z) evaluate_tfb_once(
-        x = x, arg = y, coefs = z,
-        basis = attr(object, "basis"),
-        X = attr(object, "basis_matrix")
-      )
+      function(x, y, z) {
+        evaluate_tfb_once(
+          x = x, arg = y, coefs = z,
+          basis = attr(object, "basis"),
+          X = attr(object, "basis_matrix")
+        )
+      }
     )
   }
   if (!inherits(object, "tfb_fpc")) {
