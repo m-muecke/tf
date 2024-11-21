@@ -84,7 +84,7 @@ containing evaluations or a list of 2-column matrices/data.frames with
 \code{arg} in the first and evaluations in the second column
 
 \code{tfd.default} returns class prototype when argument to tfd() is
-NULL or not a recognised class
+\code{NULL} or not a recognised class.
 }
 \details{
 \strong{\code{evaluator}}: must be the (quoted or bare) name of a
