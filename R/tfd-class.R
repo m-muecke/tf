@@ -42,7 +42,7 @@ new_tfd <- function(arg = NULL, datalist = NULL, regular = TRUE,
   if (!regular) {
     datalist <- map2(
       datalist, arg,
-      \(x, y) {
+      function(x, y) {
         this_arg <- unname(y[!is.na(x)])
         list(arg = this_arg, value = unname(x[!is.na(x)]))
       }

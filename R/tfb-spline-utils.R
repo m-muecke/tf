@@ -137,15 +137,16 @@ fit_penalized_ls <- function(data, spec_object, arg_u, gam_args, regular) {
   gam_args <- gam_args[names(gam_args) %in% names(formals(magic))]
   ret <- map2(
     index_list, eval_list,
-    \(x, y) possibly(magic_smooth_coef,
-      quiet = FALSE,
-      otherwise = list(
-        coef = rep(NA_real_, ncol(spec_object$X)),
-        pve = NA_real_,
-        sp = NA_real_
-      )
-    )
-    (y, x, spec_object, gam_args)
+    function(x, y) {
+      possibly(magic_smooth_coef,
+        quiet = FALSE,
+        otherwise = list(
+          coef = rep(NA_real_, ncol(spec_object$X)),
+          pve = NA_real_,
+          sp = NA_real_
+        )
+      )(y, x, spec_object, gam_args)
+    }
   )
   sp <- map_dbl(ret, "sp")
   pve <- map_dbl(ret, "pve")
@@ -206,14 +207,16 @@ fit_ml <- function(data, spec_object, gam_args, arg_u, penalized, sp = -1) {
   }
   ret <- map2(
     index_list, eval_list,
-    \(x, y) possibly(fit_ml_once,
-      quiet = FALSE,
-      otherwise = list(
-        coef = rep(NA_real_, ncol(spec_object$X)),
-        pve = NA_real_,
-        sp = NA_real_
-      )
-    )(x, y, gam_prep = gam_prep, sp = sp)
+    function(x, y) {
+      possibly(fit_ml_once,
+        quiet = FALSE,
+        otherwise = list(
+          coef = rep(NA_real_, ncol(spec_object$X)),
+          pve = NA_real_,
+          sp = NA_real_
+        )
+      )(x, y, gam_prep = gam_prep, sp = sp)
+    }
   )
   names(ret) <- levels(data$id)
   coef <- map(ret, "coef")
