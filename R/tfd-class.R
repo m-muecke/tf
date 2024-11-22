@@ -32,7 +32,7 @@ new_tfd <- function(arg = NULL, datalist = NULL, regular = TRUE,
   domain <- domain %||% range(arg, na.rm = TRUE)
   assert_numeric(domain,
     finite = TRUE, any.missing = FALSE,
-    sorted = TRUE, len = 2, unique = TRUE
+    sorted = TRUE, len = 2, unique = if (vec_size(datalist) == 1) FALSE else TRUE
   )
   stopifnot(
     domain[1] <= min(unlist(arg, use.names = FALSE)),
@@ -132,7 +132,7 @@ tfd.matrix <- function(data, arg = NULL, domain = NULL,
   assert_numeric(data)
   evaluator <- as_name(enexpr(evaluator))
   arg <- find_arg(data, arg) # either arg or numeric colnames or 1:ncol
-  id <- unique_id(rownames(data) %||% seq_len(dim(data)[1]))
+  id <- unique_id(rownames(data) %||% seq_len(nrow(data)))
   # make factor conversion explicit to avoid reordering
   datalist <- split(data, factor(id, unique(as.character(id))))
   names(datalist) <- rownames(data)
@@ -175,7 +175,7 @@ tfd.data.frame <- function(data, id = 1, arg = 2, value = 3, domain = NULL,
   id <- factor(data[[1]], levels = as.factor(unique(data[[1]])))
   datalist <- split(data[[3]], id)
   arg <- split(data[[2]], id)
-  regular <- length(arg) == 1 | all(duplicated(arg)[-1])
+  regular <- length(arg) == 1 || all(duplicated(arg)[-1])
   new_tfd(arg, datalist, regular, domain, evaluator)
 }
 
@@ -300,11 +300,13 @@ tfd.tf <- function(data, arg = NULL, domain = NULL,
 
 #' @rdname tfd
 #' @description `tfd.default` returns class prototype when argument to tfd() is
-#'   NULL or not a recognised class
+#'   `NULL` or not a recognised class.
 #' @export
 tfd.default <- function(data, arg = NULL, domain = NULL,
                         evaluator = tf_approx_linear, ...) {
-  cli::cli_inform("Input {.arg data} not recognized class; returning prototype of length 0.")
+  if (!missing(data)) {
+    cli::cli_inform("Input {.arg data} not recognized class; returning prototype of length 0.")
+  }
   datalist <- list()
   evaluator <- as_name(enexpr(evaluator))
   new_tfd(arg = arg, datalist = datalist, domain = domain, regular = TRUE,

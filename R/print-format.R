@@ -123,8 +123,9 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
     x <- head(x, n)
   }
   resolution <- get_resolution(tf_arg(x))
+  signif_arg <- abs(floor(log10(resolution)))
   str <- string_rep_tf(x,
-    signif_arg = abs(floor(log10(resolution))),
+    signif_arg = if (signif_arg == 0) 1 else signif_arg,
     digits = digits, nsmall = nsmall, ...
   )
   if (prefix) {

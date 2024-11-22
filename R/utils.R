@@ -16,16 +16,20 @@ find_arg <- function(data, arg) {
       )
       arg <- regmatches(names, arg_matches)
       arg <- suppressWarnings(as.numeric(arg))
-      if (n_distinct(arg) != dim(data)[2]) arg <- NULL
+      if (n_distinct(arg) != ncol(data)) arg <- NULL
     }
     if (is.null(arg) || anyNA(arg)) {
-      cli::cli_inform("Column names not suitable as 'arg'-values. Using {.code 1:ncol(data)}.")
+      cli::cli_inform(
+        "Column names not suitable as {.arg arg} values. Using {.code seq_len(ncol(data))}."
+      )
       arg <- numeric(0)
     }
   }
-  if (!length(arg)) arg <- seq_len(dim(data)[2])
+  if (length(arg) == 0) arg <- seq_len(ncol(data))
   assert_numeric(arg, any.missing = FALSE)
-  assert_true(length(arg) == dim(data)[2])
+  if (length(arg) != ncol(data)) {
+    cli::cli_abort("{.arg arg} must have same length as {.arg data}.")
+  }
   list(arg)
 }
 

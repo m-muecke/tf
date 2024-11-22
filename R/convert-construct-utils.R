@@ -80,7 +80,7 @@ mat_2_df <- function(x, arg) {
     is.numeric(arg), length(arg) == ncol(x)
   )
 
-  id <- unique_id(rownames(x)) %||% seq_len(dim(x)[1])
+  id <- unique_id(rownames(x)) %||% seq_len(nrow(x))
   id <- ordered(id, levels = unique(id))
   df_2_df(data_frame(
     # use t(x) here so that order of vector remains unchanged...
