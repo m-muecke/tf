@@ -257,7 +257,7 @@ assert_tfd <- function(x) assert_class(x, "tfd")
 
 assert_tfb <- function(x) assert_class(x, "tfb")
 
-check_bound <- function(x, f) {
+check_limit <- function(x, f) {
   domain <- tf_domain(f)
   res <- check_numeric(x,
     lower = domain[1], upper = domain[2], any.missing = FALSE
@@ -265,13 +265,13 @@ check_bound <- function(x, f) {
   if (!isTRUE(res)) {
     "Integration limits must be numeric and within the domain"
   } else if (!length(x) %in% c(1, length(f))) {
-    "Integration limits must have the same length as the function"
+    "Integration limits length must be 1 or equal to the number of functions"
   } else {
     TRUE
   }
 }
 
-assert_bound <- makeAssertionFunction(check_bound)
+assert_limit <- makeAssertionFunction(check_limit)
 
 # Source: <https://github.com/mlr-org/mlr3misc/blob/main/R/format_bib.R>
 # by Michel Lang (copied here Feb 2024)
