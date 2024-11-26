@@ -19,10 +19,10 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
     finite = TRUE, any.missing = FALSE,
     sorted = TRUE, len = 2, unique = TRUE
   )
-  stopifnot(
-    domain[1] <= min(unlist(arg_u, use.names = FALSE)),
-    domain[2] >= max(unlist(arg_u, use.names = FALSE))
-  )
+  u_args <- unlist(arg_u, use.names = FALSE)
+  if (domain[1] > min(u_args) || max(u_args) > domain[2]) {
+    cli::cli_abort("Evaluations must be inside the domain.")
+  }
 
   # explicit factor-conversion to avoid reordering:
   data$id <- factor(data$id, unique(as.character(data$id)))
@@ -30,7 +30,9 @@ new_tfb_spline <- function(data, domain = NULL, arg = NULL,
   s_args <- list(...)[names(list(...)) %in% names(formals(s))]
   if (!has_name(s_args, "bs")) s_args$bs <- "cr"
   if (s_args$bs == "ad") {
-    cli::cli_warn("Adaptive smooths with ({.code bs = 'ad'}) not implemented yet. Changing to {.code bs = 'cr'}.")
+    cli::cli_warn(
+      "Adaptive smooths with ({.code bs = 'ad'}) not implemented yet. Changing to {.code bs = 'cr'}."
+    )
     s_args$bs <- "cr"
   }
   if (!has_name(s_args, "k")) s_args$k <- min(25, nrow(arg_u))
@@ -272,9 +274,9 @@ tfb_spline.list <- function(data, arg = NULL,
                             global = FALSE,
                             verbose = TRUE, ...) {
   vectors <- map_lgl(data, is.numeric)
-  stopifnot(all(vectors) || !any(vectors))
-
-  names_data <- names(data)
+  if (any(vectors) && !all(vectors)) {
+    cli::cli_abort("{.arg data} must have the same type.")
+  }
 
   if (all(vectors)) {
     lens <- lengths(data)

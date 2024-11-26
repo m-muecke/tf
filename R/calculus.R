@@ -227,18 +227,8 @@ tf_integrate.tfb <- function(f, arg,
     arg <- tf_arg(f)
   }
   assert_arg(arg, f)
-  assert_numeric(lower,
-    lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-    any.missing = FALSE
-  )
-  assert_numeric(upper,
-    lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-    any.missing = FALSE
-  )
-  stopifnot(
-    length(lower) %in% c(1, length(f)),
-    length(upper) %in% c(1, length(f))
-  )
+  assert_bound(lower, f)
+  assert_bound(upper, f)
   if (definite) {
     return(tf_integrate(tfd(f, arg = arg),
       lower = lower, upper = upper,

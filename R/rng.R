@@ -85,7 +85,7 @@ tf_rgp <- function(n, arg = 51L, cov = c("squareexp", "wiener", "matern"),
 #' @rdname tf_jiggle
 #' @family tidyfun RNG functions
 tf_jiggle <- function(f, amount = 0.4, ...) {
-  stopifnot(is_tfd(f))
+  assert_tfd(f)
   assert_number(amount, lower = 0, upper = 0.5)
   f <- as.tfd_irreg(f)
   new_args <- map(tf_arg(f), tf_jiggle_args, amount = amount)
@@ -121,7 +121,7 @@ tf_jiggle_args <- function(arg, amount) {
 #' @export
 #' @family tidyfun RNG functions
 tf_sparsify <- function(f, dropout = 0.5, ...) {
-  stopifnot(is_tf(f))
+  assert_tf(f)
   nas <- map(tf_evaluations(f), \(x) runif(length(x)) < dropout)
   tf_evals <- map2(tf_evaluations(f), nas, \(x, y) x[!y])
   tf_args <- ensure_list(tf_arg(f))

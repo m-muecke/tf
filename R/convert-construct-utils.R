@@ -3,7 +3,7 @@
 # replaces functionality of tf_unnest.tf
 # turn a tf object into a data.frame evaluated on arg with cols id-arg-value
 tf_2_df <- function(tf, arg, interpolate = TRUE, ...) {
-  assert_class(tf, "tf")
+  assert_tf(tf)
   if (missing(arg)) {
     arg <- tf_arg(tf)
   }
@@ -65,20 +65,17 @@ df_2_mat <- function(data, binning = FALSE, maxbins = 1000) {
 
 df_2_df <- function(data, id = 1, arg = 2, value = 3) {
   data <- na.omit(data[, c(id, arg, value)])
-  stopifnot(
-    nrow(data) > 0,
-    is.numeric(data[[arg]]),
-    is.numeric(data[[value]])
-  )
+  assert_data_frame(data, min.rows = 1)
+  assert_numeric(data$arg)
+  assert_numeric(data$value)
   colnames(data) <- c("id", "arg", "value")
   data
 }
 
 mat_2_df <- function(x, arg) {
-  stopifnot(
-    is.numeric(x), is.matrix(x),
-    is.numeric(arg), length(arg) == ncol(x)
-  )
+  assert_matrix(x)
+  assert_numeric(arg)
+  assert_true(length(arg) == ncol(x))
 
   id <- unique_id(rownames(x)) %||% seq_len(nrow(x))
   id <- ordered(id, levels = unique(id))

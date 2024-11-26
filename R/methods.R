@@ -77,14 +77,14 @@ tf_count.tfd_reg <- function(f) length(tf_arg(f))
 #' @rdname tfmethods
 #' @export
 tf_domain <- function(f) {
-  assert_class(f, "tf")
+  assert_tf(f)
   attr(f, "domain")
 }
 
 #' @rdname tfmethods
 #' @export
 `tf_domain<-` <- function(x, value) {
-  assert_class(x, "tf")
+  assert_tf(x)
   assert_numeric(value, any.missing = FALSE, len = 2, unique = TRUE, sorted = TRUE)
   cli::cli_warn(c(
     x = "This changes the functions' domain but not their argument values!",
@@ -99,12 +99,12 @@ tf_domain <- function(f) {
 #' @rdname tfmethods
 #' @export
 tf_evaluator <- function(f) {
-  assert_class(f, "tfd")
+  assert_tfd(f)
   attr(f, "evaluator")
 }
 
 tf_evaluator_expr <- function(f) {
-  assert_class(f, "tfd")
+  assert_tfd(f)
   attr(f, "evaluator_name") |> as.symbol()
 }
 
@@ -123,9 +123,8 @@ tf_evaluator_expr <- function(f) {
   } else {
     as_name(enexpr(value))
   }
-  stopifnot(is_tfd(x))
   evaluator <- get(value, mode = "function", envir = parent.frame())
-  assert_class(x, "tfd")
+  assert_tfd(x)
   assert_set_equal(
     names(formals(evaluator)),
     c("x", "arg", "evaluations")
@@ -143,7 +142,7 @@ tf_evaluator_expr <- function(f) {
 #'    (columns) evaluated on `tf_arg(f)` (rows).
 #' @export
 tf_basis <- function(f, as_tfd = FALSE) {
-  assert_class(f, "tfb")
+  assert_tfb(f)
   basis <- attr(f, "basis")
   if (!as_tfd) {
     return(basis)

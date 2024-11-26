@@ -180,7 +180,6 @@ assert_compatible_size <- function(op, x, y) {
   }
 }
 
-
 #-------------------------------------------------------------------------------
 # misc
 
@@ -251,6 +250,28 @@ sort_unique <- function(x, simplify = FALSE) {
   }
   sort(unique(x))
 }
+
+assert_tf <- function(x) assert_class(x, "tf")
+
+assert_tfd <- function(x) assert_class(x, "tfd")
+
+assert_tfb <- function(x) assert_class(x, "tfb")
+
+check_bound <- function(x, f) {
+  domain <- tf_domain(f)
+  res <- check_numeric(x,
+    lower = domain[1], upper = domain[2], any.missing = FALSE
+  )
+  if (!isTRUE(res)) {
+    "Integration limits must be numeric and within the domain"
+  } else if (!length(x) %in% c(1, length(f))) {
+    "Integration limits must have the same length as the function"
+  } else {
+    TRUE
+  }
+}
+
+assert_bound <- makeAssertionFunction(check_bound)
 
 # Source: <https://github.com/mlr-org/mlr3misc/blob/main/R/format_bib.R>
 # by Michel Lang (copied here Feb 2024)
