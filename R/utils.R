@@ -263,9 +263,9 @@ check_limit <- function(x, f) {
     lower = domain[1], upper = domain[2], any.missing = FALSE
   )
   if (!isTRUE(res)) {
-    "Integration limits must be numeric and within the domain"
+    "Integration limit must be numeric and within the domain"
   } else if (!length(x) %in% c(1, length(f))) {
-    "Integration limits length must be 1 or equal to the number of functions"
+    "Integration limit length must be 1 or equal to the number of functions"
   } else {
     TRUE
   }
