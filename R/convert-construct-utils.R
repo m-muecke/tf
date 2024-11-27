@@ -66,8 +66,8 @@ df_2_mat <- function(data, binning = FALSE, maxbins = 1000) {
 df_2_df <- function(data, id = 1, arg = 2, value = 3) {
   data <- na.omit(data[, c(id, arg, value)])
   assert_data_frame(data, min.rows = 1)
-  assert_numeric(data$arg)
-  assert_numeric(data$value)
+  assert_numeric(data[[arg]])
+  assert_numeric(data[[value]])
   colnames(data) <- c("id", "arg", "value")
   data
 }
