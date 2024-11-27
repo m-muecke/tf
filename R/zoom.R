@@ -39,7 +39,11 @@ prep_tf_zoom_args <- function(f, begin, end) {
   } else {
     regular <- FALSE
   }
-  stopifnot(length(begin) == length(end), all(begin < end))
+  if (length(begin) != length(end) || !all(begin < end)) {
+    cli::cli_abort(
+      "{.arg begin} and {.arg end} must be of same length and ordered."
+    )
+  }
   new_domain <- c(min(begin), max(end))
   list(begin = begin, end = end, dom = new_domain, regular = regular)
 }

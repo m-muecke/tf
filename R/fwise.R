@@ -44,7 +44,7 @@ NULL
 #' tf_crosscor(x, -x)
 #' tf_crosscov(x, x) == tf_fvar(x)
 tf_fwise <- function(x, .f, arg = tf_arg(x), ...) {
-  assert_class(x, "tf")
+  assert_tf(x)
   assert_arg(arg = arg, x = x)
   x_ <- x[, arg, matrix = FALSE]
   f_map <- as_mapper(.f, ...)
@@ -93,7 +93,7 @@ tf_frange <- function(x, arg = tf_arg(x), na.rm = FALSE, finite = FALSE) {
 #' @describeIn functionwise mean of each function:
 #'   \eqn{\tfrac{1}{|T|}\int_T x_i(t) dt}
 tf_fmean <- function(x, arg = tf_arg(x)) {
-  assert_class(x, "tf")
+  assert_tf(x)
   assert_arg(arg = arg, x = x)
   x_ <- tf_interpolate(x, arg = arg)
   arg <- ensure_list(arg)
@@ -105,7 +105,7 @@ tf_fmean <- function(x, arg = tf_arg(x)) {
 #' @describeIn functionwise variance of each function:
 #'   \eqn{\tfrac{1}{|T|}\int_T (x_i(t) - \bar x(t))^2 dt}
 tf_fvar <- function(x, arg = tf_arg(x)) {
-  assert_class(x, "tf")
+  assert_tf(x)
   assert_arg(arg = arg, x = x)
   arg <- ensure_list(arg)
   length <- map_dbl(arg, max) - map_dbl(arg, min)
@@ -127,15 +127,13 @@ tf_fsd <- function(x, arg = tf_arg(x)) {
 #'   \eqn{\tfrac{1}{|T|}\int_T (x_i(t) - \bar x(t)) (y_i(t)-\bar y(t)) dt}
 tf_crosscov <- function(x, y, arg = tf_arg(x)) {
   # check same domain, arg
-  assert_class(x, "tf")
-  assert_class(y, "tf")
+  assert_tf(x)
+  assert_tf(y)
   if (length(x) != length(y) && length(x) != 1 && length(y) != 1) {
     cli::cli_abort("{.arg x} or {.arg y} must have length 1 or the same lengths.")
   }
   assert_arg(arg = arg, x = x)
-  assert_true(
-    identical(tf_domain(x), tf_domain(y))
-  )
+  assert_true(identical(tf_domain(x), tf_domain(y)))
   arg <- ensure_list(arg)
   length <- map_dbl(arg, max) - map_dbl(arg, min)
   # set up common args &

@@ -177,18 +177,8 @@ tf_integrate.tfd <- function(f, arg,
   assert_arg(arg, f)
   arg <- ensure_list(arg)
   # TODO: integrate is NA whenever arg does not cover entire domain!
-  assert_numeric(lower,
-    lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-    any.missing = FALSE
-  )
-  assert_numeric(upper,
-    lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-    any.missing = FALSE
-  )
-  stopifnot(
-    length(lower) %in% c(1, length(f)),
-    length(upper) %in% c(1, length(f))
-  )
+  assert_limit(lower, f)
+  assert_limit(upper, f)
   limits <- cbind(lower, upper)
   if (nrow(limits) > 1) {
     if (!definite) .NotYetImplemented() # needs vd-data
@@ -227,18 +217,8 @@ tf_integrate.tfb <- function(f, arg,
     arg <- tf_arg(f)
   }
   assert_arg(arg, f)
-  assert_numeric(lower,
-    lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-    any.missing = FALSE
-  )
-  assert_numeric(upper,
-    lower = tf_domain(f)[1], upper = tf_domain(f)[2],
-    any.missing = FALSE
-  )
-  stopifnot(
-    length(lower) %in% c(1, length(f)),
-    length(upper) %in% c(1, length(f))
-  )
+  assert_limit(lower, f)
+  assert_limit(upper, f)
   if (definite) {
     return(tf_integrate(tfd(f, arg = arg),
       lower = lower, upper = upper,
