@@ -76,16 +76,16 @@ test_that("unpenalized tfb_spline works", {
   )
 
   # GLM case: fitting on exp-scale and transforming back:
-  expect_equal(
-    tfb_spline(exp(smoo),
+  expect_warning(
+    actual <- tfb_spline(exp(smoo),
       family = gaussian(link = "log"),
       penalized = FALSE, verbose = FALSE
     ) |>
       log() |>
       as.matrix(),
-    as.matrix(smoo),
-    tolerance = 0.001
+    "Potentially lossy cast to"
   )
+  expect_equal(actual, as.matrix(smoo), tolerance = 0.001)
 
   expect_message(
     try(
@@ -130,7 +130,6 @@ test_that("mgcv spline basis options work", {
     )
   }
 })
-
 
 test_that("global and pre-specified smoothing options work", {
   rough_global <- try(tfb(rough, global = TRUE, k = 51, verbose = FALSE))
