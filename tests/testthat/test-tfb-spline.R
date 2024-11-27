@@ -76,15 +76,10 @@ test_that("unpenalized tfb_spline works", {
   )
 
   # GLM case: fitting on exp-scale and transforming back:
-  expect_warning(
-    actual <- tfb_spline(exp(smoo),
+  actual <- tfb_spline(exp(smoo),
       family = gaussian(link = "log"),
       penalized = FALSE, verbose = FALSE
-    ) |>
-      log() |>
-      as.matrix(),
-    "Potentially lossy cast to"
-  )
+    ) |> tfd() |> log() |> as.matrix()
   expect_equal(actual, as.matrix(smoo), tolerance = 0.001)
 
   expect_message(
