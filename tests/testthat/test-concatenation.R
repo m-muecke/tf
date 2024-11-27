@@ -21,15 +21,15 @@ l <- list(
 
 test_that("vctrs basics & concatentation work for all subclasses", {
   for (i in seq_along(l)) {
-    testthat::expect_identical(
+    expect_identical(
       l[[i]],
       vec_restore(vec_proxy(l[[i]]), vec_ptype(l[[i]]))
     )
-    testthat::expect_identical(
+    expect_identical(
       vec_ptype2(l[[i]], l[[i]]),
       vec_ptype(l[[i]])
     )
-    testthat::expect_identical(
+    expect_identical(
       l[[i]],
       c(l[[i]], l[[i]])[seq_along(l[[i]])]
     )
