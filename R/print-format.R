@@ -140,3 +140,7 @@ format.tf <- function(x, digits = 2, nsmall = 0, width = options()$width,
     str, \(x) nchar(x) > width, \(x) paste0(substr(x, 1, width - 3), "...")
   ), use.names = FALSE)
 }
+
+# dynamically exported in zzz.R:
+format_glimpse.tf <- format.tf
+
