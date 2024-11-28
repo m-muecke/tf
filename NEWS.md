@@ -1,7 +1,8 @@
 # tf 0.3.5
-* more `vctrs`-compliance: use `vec_arith` for group generics (and fix `tfb` bugs),
+* fix broken `tfb`-arithmetic
+* more `vctrs`-compliance: use `vec_arith` for group generics,
    use `vctrs`-utils in `[.tf`. 
-* use `cli` for user communication 
+* use `cli` for user communication & export `format_glimpse` dynamically  
 
 # tf 0.3.4
 * bug fix: normalize tf_crosscov correctly
