@@ -149,8 +149,8 @@ or delayed development:
 ```{r growth-warping}
 plot(
   growth$growth_warp,
-  xlab = "Clock Year",
-  ylab = "Biological Year",
+  xlab = "Biological Year",
+  ylab = "Clock Year",
   lwd = 1.5,
   bty = "l",
   las = 1
@@ -226,8 +226,8 @@ legend(
 ```{r growth-gender-warping}
 plot(
   growth_male$growth_warp,
-  xlab = "Clock Year",
-  ylab = "Biological Year",
+  xlab = "Biological Year",
+  ylab = "Clock Year",
   lwd = 1.5,
   bty = "l",
   col = green_col,
@@ -300,8 +300,8 @@ plot_patient_warp <- function(i) {
   plot(
     growth_female[i, "growth_warp"],
     main = paste("Warping Function Case", i),
-    xlab = "Clock Year",
-    ylab = "Biological Year",
+    xlab = "Biological Year",
+    ylab = "Clock Year",
     lwd = 1.5,
     bty = "l",
     las = 1,
